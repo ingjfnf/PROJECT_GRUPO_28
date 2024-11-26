@@ -13,7 +13,7 @@ RUN mkdir -p data models
 RUN python pipelines/data_processing.py
 RUN python pipelines/train_models.py
 
-EXPOSE 8001
+EXPOSE 8000
 
 CMD ["streamlit", "run", "app.py", "--server.port=8000", "--server.address=0.0.0.0"]
 
