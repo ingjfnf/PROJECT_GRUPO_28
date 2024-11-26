@@ -1,23 +1,23 @@
 FROM python:3.9-slim
 
-# Configurar el directorio de trabajo dentro del contenedor
+# Establecer el directorio de trabajo
 WORKDIR /app
 
-# Copiar todos los archivos desde el directorio local al contenedor
+# Copiar todos los archivos al contenedor
 COPY . /app
 
-# Actualizar pip e instalar las dependencias desde requirements.txt
+# Instalar dependencias
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Crear las carpetas necesarias para datos y modelos
+# Crear carpetas necesarias
 RUN mkdir -p data models
 
-# Ejecutar el preprocesamiento de datos y el entrenamiento de modelos
+# Ejecutar preprocesamiento y entrenamiento
 RUN python pipelines/data_processing.py
 RUN python pipelines/train_models.py
 
-# Exponer el puerto que usará la aplicación en el contenedor
+# Exponer el puerto para Railway
 EXPOSE 8000
 
-# Comando de inicio para ejecutar Streamlit
+# Comando para iniciar Streamlit
 CMD ["streamlit", "run", "app.py", "--server.port=$PORT", "--server.address=0.0.0.0"]
