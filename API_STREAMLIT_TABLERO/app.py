@@ -22,9 +22,9 @@ datos = pd.read_csv("data/Student_Performance_Procesado.csv")
 
 # Seleccionamos las columnas especificadas para la predicción
 X = datos[['Hours Studied', 'Previous Scores', 'Extracurricular Activities', 'Sleep Hours', 'Sample Question Papers Practiced']]
-y = datos['Performance Index']
+y = datos['Performance Index']# esta es nuestra variable objetivo
 
-# Cargamos los modelos entrenados desde la carpeta 'models'
+# Cargamos los modelos entrenados previamente con el pipeline y guardados en nuestra la carpeta 'models'
 modelos = {
     "Regresión Lineal": pickle.load(open("models/linear_model.pkl", "rb")),
     "SVR": pickle.load(open("models/svr_model.pkl", "rb")),
@@ -47,7 +47,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Presentamos la tabla de comparación de métricas en el centro
+# Presentamos la tabla de comparación de métricas 
 with st.columns([1, 2, 1])[1]:
     st.dataframe(pd.DataFrame(metricas))
 
@@ -66,7 +66,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Mejor modelo con subrayado sin centrar
+
 st.markdown(
     f"""
     <p style='font-size: 16px;'><u>El mejor modelo es: <strong>{nombre_mejor_modelo}</strong></u></p>
@@ -90,6 +90,7 @@ residuales_mejor = y - y_predicho_mejor
 
 st.subheader(f"Comportamiento del Mejor Modelo: {nombre_mejor_modelo}")
 col1, col2 = st.columns(2)
+#graficamos la gráfica de predicciones vs valores reales
 with col2:
     st.write("**Predicciones vs. Valores Reales**")
     fig1, ax1 = plt.subplots(figsize=(6, 6))
@@ -100,6 +101,7 @@ with col2:
     ax1.set_title(f"Predicciones vs. Valores Reales para {nombre_mejor_modelo}")
     ax1.legend()
     st.pyplot(fig1)
+    #le explicamos al usuario en que consisten las gráficas
     st.markdown(
         """
         <h4 style='text-align: center;'>Explicación:</h4>
@@ -112,7 +114,7 @@ with col2:
     - Si los puntos siguen un patrón alrededor de la línea, esto indica un buen ajuste del modelo.
     """)
 
-        # Análisis del resultado centrado
+        # le explicados al usuario un breve análisis del resultado 
     st.markdown(
         """
         <h4 style='text-align: center;'>Análisis del resultado:</h4>
@@ -123,7 +125,7 @@ with col2:
     - Los puntos están distribuidos muy cerca de la línea ideal, lo que indica un alto poder predictivo del modelo.  
     - No se observan patrones o desviaciones sistemáticas, lo que sugiere que el modelo captura correctamente la relación entre las variables.
     """)
-
+#graficamos los residuales
 with col1:
     st.write("**Histograma de Residuales**")
     fig2, ax2 = plt.subplots(figsize=(6, 6))
@@ -132,6 +134,7 @@ with col1:
     ax2.set_ylabel("Frecuencia")
     ax2.set_title("Distribución de los Residuales")
     st.pyplot(fig2)
+    #le explicamos al usuario en que consisten las gráficas
     st.markdown(
         """
         <h4 style='text-align: center;'>Explicación:</h4>
@@ -144,7 +147,7 @@ with col1:
     - Si aparecen valores extremos, podrían ser outliers o errores del modelo en capturar algunos patrones.
     """)
 
-    # Análisis del resultado centrado
+    # le explicados al usuario un breve análisis del resultado
     st.markdown(
         """
         <h4 style='text-align: center;'>Análisis del resultado:</h4>
@@ -168,7 +171,7 @@ with st.sidebar.form("prediction_form"):
     st.header("Seleccione el Modelo para la Predicción")
     seleccion_modelo = st.selectbox("Modelo", ["Regresión Lineal", "SVR", "Árbol de Decisión"])
 
-    # Permitimos el ingreso de los parámetros para la predicción
+    # Creamos las cajas donde el usuario ingrese los parámetros para calcular la predicción
     st.subheader("Ingrese los Parámetros para la Predicción")
     horas_estudio = st.number_input("Horas de Estudio (Min: 0, Max: 10)", min_value=0, max_value=10)
     puntaje_previo = st.number_input("Puntaje Previo (Min: 0, Max: 100)", min_value=0, max_value=100)
@@ -187,8 +190,7 @@ with st.sidebar.form("prediction_form"):
         # Realizamos la predicción con el modelo seleccionado por el usuario
         modelo_seleccionado = modelos[seleccion_modelo]
         prediccion = modelo_seleccionado.predict(input_datos)
-        st.write(f"Predicción de Performance Index ({seleccion_modelo}): {prediccion[0]:.2f}")
-
-        # Mostramos la explicación del modelo seleccionado en la sección principal
+        st.write(f"Predicción de Performance Index ({seleccion_modelo}): {max(prediccion[0], 0):.2f}")# si el valor de predicción es menor q 0 ponemos 0 ya que no hay una calificación que sea menor q 0
+        # Mostramos la explicación del modelo seleccionado
         st.subheader("Explicación del Modelo Seleccionado")
         st.write(descripcion_modelos[seleccion_modelo])
