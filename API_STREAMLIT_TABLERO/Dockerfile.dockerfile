@@ -15,4 +15,5 @@ RUN python pipelines/train_models.py
 
 EXPOSE 8001
 
-CMD ["streamlit", "run", "app.py", "--server.port=8001", "--server.address=0.0.0.0"]
+CMD ["streamlit", "run", "app.py", "--server.port=$PORT", "--server.address=0.0.0.0"]
+
