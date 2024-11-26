@@ -9,8 +9,9 @@ COPY . /app
 # Instalar dependencias
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Copiar los archivos necesarios
+# copiamos archivos necesarios
 COPY data /app/data
+COPY models /app/models
 
 # Crear carpetas necesarias
 RUN mkdir -p data models
