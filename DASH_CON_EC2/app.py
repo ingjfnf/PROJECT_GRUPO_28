@@ -187,7 +187,10 @@ with st.sidebar.form("prediction_form"):
         # Realizamos la predicción con el modelo seleccionado por el usuario
         modelo_seleccionado = modelos[seleccion_modelo]
         prediccion = modelo_seleccionado.predict(input_datos)
-        st.write(f"Predicción de Performance Index ({seleccion_modelo}): {prediccion[0]:.2f}")
+        if prediccion>0:
+            st.write(f"Predicción de Performance Index ({seleccion_modelo}): {prediccion[0]:.2f}")
+        else:
+            st.write(f"Predicción de Performance Index ({seleccion_modelo}): {0:.2f}")
 
         # Mostramos la explicación del modelo seleccionado en la sección principal
         st.subheader("Explicación del Modelo Seleccionado")
