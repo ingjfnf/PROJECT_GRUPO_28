@@ -1,18 +1,23 @@
+# Usamos una imagen base ligera de Python
 FROM python:3.9-slim
 
+# Establecemos el directorio de trabajo en el contenedor
 WORKDIR /app
 
+# Copiamos todos los archivos del proyecto al contenedor
 COPY . /app
 
+# Instalamos las dependencias especificadas en requirements.txt
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-# Crear las carpetas necesarias
-RUN mkdir -p data models
+# Creamos la carpeta necesaria para los modelos
+RUN mkdir -p models
 
-# Ejecutar el preprocesamiento y entrenamiento
-RUN python pipelines/data_processing.py
+# Ejecutamos el entrenamiento de los modelos (genera los .pkl)
 RUN python pipelines/train_models.py
 
-EXPOSE 8001
+# Exponemos el puerto para la aplicación
+EXPOSE 8000
 
-CMD ["streamlit", "run", "app.py", "--server.port=8001", "--server.address=0.0.0.0"]
+# Comando para iniciar Streamlit
+CMD ["streamlit", "run", "app.py", "--server.port=8000", "--server.address=0.0.0.0"]
